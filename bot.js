@@ -2,8 +2,15 @@ const mineflayer = require('mineflayer');
 const Movements = require('mineflayer-pathfinder').Movements;
 const pathfinder = require('mineflayer-pathfinder').pathfinder;
 const { GoalBlock, GoalXZ } = require('mineflayer-pathfinder').goals;
-
+const express = require('express');
+const app = express();
 const config = require('./settings.json');
+
+app.get('/', (req, res) => {
+   res.send('Bot çalışıyor!')
+})
+
+app.listen(8080);
 
 const loggers = require('./logging.js');
 const logger = loggers.logger;
@@ -13,8 +20,8 @@ function makeid(length) {
    const charactersLength = characters.length;
    let counter = 0;
    while (counter < length) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-     counter += 1;
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
    }
    return result;
 }
@@ -39,11 +46,11 @@ function createBot() {
 
    bot.once('spawn', () => {
       logger.info("Bot sunucuya girdi!");
-      setTimeout( () => {
+      setTimeout(() => {
          bot.end();
          console.log("Bot sunucudan ayrıldı!")
       }, 10000);
-      
+
 
       // if (config.utils['auto-auth'].enabled) {
       //    logger.info('Started auto-auth module');
@@ -84,7 +91,7 @@ function createBot() {
 
       if (config.position.enabled) {
          logger.info(
-             `Starting moving to target location (${pos.x}, ${pos.y}, ${pos.z})`
+            `Starting moving to target location (${pos.x}, ${pos.y}, ${pos.z})`
          );
          bot.pathfinder.setGoal(new GoalBlock(pos.x, pos.y, pos.z));
       }
@@ -103,14 +110,14 @@ function createBot() {
             let attackMobs = config.utils['anti-afk']['hit']['attack-mobs']
 
             setInterval(() => {
-               if(attackMobs) {
-                     let entity = bot.nearestEntity(e => e.type !== 'object' && e.type !== 'player'
-                         && e.type !== 'global' && e.type !== 'orb' && e.type !== 'other');
+               if (attackMobs) {
+                  let entity = bot.nearestEntity(e => e.type !== 'object' && e.type !== 'player'
+                     && e.type !== 'global' && e.type !== 'orb' && e.type !== 'other');
 
-                     if(entity) {
-                        bot.attack(entity);
-                        return
-                     }
+                  if (entity) {
+                     bot.attack(entity);
+                     return
+                  }
                }
 
                bot.swingArm("right", true);
@@ -137,9 +144,9 @@ function createBot() {
    });
 
    bot.on('goal_reached', () => {
-      if(config.position.enabled) {
+      if (config.position.enabled) {
          logger.info(
-             `Bot arrived to target location. ${bot.entity.position}`
+            `Bot arrived to target location. ${bot.entity.position}`
          );
       }
    });
@@ -154,13 +161,13 @@ function createBot() {
       bot.on('end', () => {
          setTimeout(() => {
             createBot();
-         },90000);
+         }, 90000);
       });
    }
 
    bot.on('kicked', (reason) => {
       let reasonText = JSON.parse(reason).text;
-      if(reasonText === '') {
+      if (reasonText === '') {
          reasonText = JSON.parse(reason).extra[0].text
       }
       reasonText = reasonText.replace(/§./g, '');
@@ -168,33 +175,33 @@ function createBot() {
       logger.warn(`Bot was kicked from the server. Reason: ${reasonText}`)
    }
    );
-   
+
    bot.on('error', (err) =>
       logger.error(`${err.message}`)
    );
 }
 
 function circleWalk(bot, radius) {
-    return new Promise(() => {
-        const pos = bot.entity.position;
-        const x = pos.x;
-        const y = pos.y;
-        const z = pos.z;
+   return new Promise(() => {
+      const pos = bot.entity.position;
+      const x = pos.x;
+      const y = pos.y;
+      const z = pos.z;
 
-        const points = [
-            [x + radius, y, z],
-            [x, y, z + radius],
-            [x - radius, y, z],
-            [x, y, z - radius],
-        ];
+      const points = [
+         [x + radius, y, z],
+         [x, y, z + radius],
+         [x - radius, y, z],
+         [x, y, z - radius],
+      ];
 
-        let i = 0;
-        setInterval(() => {
-             if(i === points.length) i = 0;
-             bot.pathfinder.setGoal(new GoalXZ(points[i][0], points[i][2]));
-             i++;
-        }, 1000);
-    });
+      let i = 0;
+      setInterval(() => {
+         if (i === points.length) i = 0;
+         bot.pathfinder.setGoal(new GoalXZ(points[i][0], points[i][2]));
+         i++;
+      }, 1000);
+   });
 }
 
 createBot();

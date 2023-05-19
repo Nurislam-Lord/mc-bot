@@ -1,0 +1,59 @@
+{
+  "bot-account": {
+    "username": "bot",
+    "password": "",
+    "type": "mojang"
+  },
+
+  "server": {
+    "ip": "6lmaldr31Mont.aternos.me",
+    "port": 41946,
+    "version": "1.16.5"
+  },
+
+  "position": {
+    "enabled": false,
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+
+  "utils": {
+    "auto-auth": {
+      "enabled": true,
+      "password": "bot1234"
+    },
+
+    "anti-afk": {
+      "enabled": true,
+      "sneak": true,
+      "jump": true,
+      "rotate": false,
+
+      "hit": {
+        "enabled": false,
+        "delay": 1000,
+        "attack-mobs": true
+      },
+
+      "circle-walk": {
+        "enabled": true,
+        "radius": 2
+      }
+    },
+
+    "chat-messages": {
+      "enabled": true,
+      "repeat": false,
+      "repeat-delay": 60,
+
+      "messages": [
+        "Ben botum"
+      ]
+    },
+
+    "chat-log": true,
+    "auto-reconnect": true,
+    "auto-reconnect-delay": 5000
+  }
+}
